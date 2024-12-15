@@ -19,11 +19,19 @@ export class GatewayService {
     }
   }
 
+  // Get a list of all connected clients
+  getConnectedClients() {
+    const connectedClients = Array.from(this.server.sockets.sockets.values());
+    console.log('Connected Clients:', connectedClients);
+    return connectedClients.map((client) => client);  // Return only client IDs
+  }
+
   // Send a message to a specific client
   sendToClient(clientId: string, event: string, data: any) {
     if (this.server) {
       const client = this.server.sockets.sockets.get(clientId);
       if (client) {
+        console.log(`Sending event ${event} to client ${clientId}.`);
         client.emit(event, data);
       } else {
         console.error(`Client with ID ${clientId} is not connected.`);

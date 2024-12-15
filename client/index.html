@@ -1,87 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Print Job Client</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+        /* Custom styles for Tailwind dark mode */
+        .dark-mode {
+            --tw-bg-opacity: 1;
+            background-color: rgba(17, 24, 39, var(--tw-bg-opacity));
+            /* Dark background */
+            color: #e4e7ec;
         }
-        h1 {
-            text-align: center;
+
+        #registerPrinterModal {
+            position: absolute;
+            /* or 'fixed', depending on your needs */
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            /* Move it back by 50% of its own width and height */
         }
-        form {
-            margin-bottom: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .form-group input, .form-group select, .form-group button {
-            width: 100%;
-            padding: 10px;
-            margin: 5px 0;
-            box-sizing: border-box;
-        }
-        .register-printer {
-            margin-top: 30px;
+
+        select{
+            color: black !important;
         }
     </style>
 </head>
-<body>
-    <h1>Print Job Client</h1>
 
-    <!-- Upload Print Job -->
-    <form id="printJobForm">
-        <h2>Submit a Print Job</h2>
-        <div class="form-group">
-            <label for="file">Upload File:</label>
-            <input type="file" id="file" name="file" required>
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+    <h1 class="text-3xl text-center my-6">Print Job Client</h1>
+
+    <!-- Upload Print Job Form -->
+    <form id="printJobForm" class="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+        <h2 class="text-xl mb-4">Submit a Print Job</h2>
+        <div class="mb-4">
+            <label for="file" class="block text-gray-700 dark:text-gray-300 mb-2">Upload File:</label>
+            <input type="file" id="file" name="file" class="w-full p-2 border border-gray-300 rounded-md" required>
         </div>
-        <div class="form-group">
-            <label for="settings">Plotter Settings:</label>
-            <select id="settings" name="settings">
+        <div class="mb-4">
+            <label for="settings" class="block text-gray-700 dark:text-gray-300 mb-2">Plotter Settings:</label>
+            <select id="settings" name="settings" class="w-full p-2 border border-gray-300 rounded-md">
                 <option value="high-quality">High Quality</option>
                 <option value="draft">Draft</option>
                 <option value="grayscale">Grayscale</option>
             </select>
         </div>
-        <div class="form-group">
-            <button type="submit">Submit Print Job</button>
+        <div class="mb-4">
+            <label for="printerDropdown" class="block text-gray-700 dark:text-gray-300 mb-2">Select Printer:</label>
+            <select id="printerDropdown" name="printerDropdown" class="w-full p-2 border border-gray-300 rounded-md"
+                required>
+                <option value="" disabled selected>Select a printer</option>
+            </select>
+        </div>
+        <div class="mb-4">
+            <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Submit Print
+                Job</button>
+        </div>
+        <!-- Button to open modal -->
+        <div class="text-center">
+            <button type="button" id="openRegisterModal"
+                class="w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-700">Register Printer</button>
         </div>
     </form>
 
-    <!-- Register Printer -->
-    <div class="register-printer">
-        <h2>Register Your Printer</h2>
-        <form id="registerPrinterForm">
-            <div class="form-group">
-                <label for="printerName">Printer Name:</label>
-                <input type="text" id="printerName" name="printerName" placeholder="Enter Printer Name" required>
-            </div>
-            <div class="form-group">
-                <label for="printerType">Connection Type:</label>
-                <select id="printerType" name="printerType">
-                    <option value="usb">USB</option>
-                    <option value="ip">IP</option>
-                </select>
-            </div>
-            <div id="printerDetails" class="form-group">
-                <label for="connectionDetail">Connection Detail (IP or Port):</label>
-                <input type="text" id="connectionDetail" name="connectionDetail" placeholder="Enter IP or USB Port" required>
-            </div>
-            <div class="form-group">
-                <button type="submit">Register Printer</button>
-            </div>
-        </form>
-        <p>Or download the <a href="/client-agent-installer" id="downloadAgent">Client-Side Agent</a> for automatic printer setup.</p>
+    <!-- Register Printer Modal -->
+    <div id="registerPrinterModal" class="inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+        <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full">
+            <h2 class="text-xl mb-4 text-center text-gray-900 dark:text-white">Register Your Printer</h2>
+            <form id="registerPrinterForm">
+                <div class="mb-4">
+                    <label for="printerName" class="block text-gray-700 dark:text-gray-300 mb-2">Printer Name:</label>
+                    <input type="text" id="printerName" name="printerName"
+                        class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter Printer Name" required>
+                </div>
+                <div class="mb-4">
+                    <label for="printerType" class="block text-gray-700 dark:text-gray-300 mb-2">Connection
+                        Type:</label>
+                    <select id="printerType" name="printerType" class="w-full p-2 border border-gray-300 rounded-md">
+                        <option value="usb">USB</option>
+                        <option value="ip">IP</option>
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label for="connectionDetail" class="block text-gray-700 dark:text-gray-300 mb-2">Connection Detail
+                        (IP or Port):</label>
+                    <input type="text" id="connectionDetail" name="connectionDetail"
+                        class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter IP or USB Port"
+                        required>
+                </div>
+                <div class="mb-4 flex justify-between">
+                    <button type="submit" class="bg-green-600 text-white p-2 rounded-md hover:bg-green-700">Register
+                        Printer</button>
+                    <button type="button" id="closeModal"
+                        class="bg-red-600 text-white p-2 rounded-md hover:bg-red-700">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Optional Client-Side Agent Download -->
+    <div class="mt-6 text-center">
+        <p>Or download the <a href="/client-agent-installer" id="downloadAgent"
+                class="text-blue-600 dark:text-blue-400">Client-Side Agent</a> for automatic printer setup.</p>
     </div>
 
     <script src="script.js"></script>
+    <script>
+        // Show Register Printer Modal
+        document.getElementById('openRegisterModal').addEventListener('click', () => {
+            document.getElementById('registerPrinterModal').classList.remove('hidden');
+        });
+
+        // Close Register Printer Modal
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('registerPrinterModal').classList.add('hidden');
+        });
+
+        // Handle Printer Registration
+        document.getElementById('registerPrinterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const printerName = document.getElementById('printerName').value;
+            const printerType = document.getElementById('printerType').value;
+            const connectionDetail = document.getElementById('connectionDetail').value;
+
+            const printerData = {
+                name: printerName,
+                connectionType: printerType,
+                connectionDetail,
+            };
+
+            try {
+                const headers = new Headers();
+                headers.append('Content-Type', 'application/json');
+                headers.append('x-client-id', 'my-client-id');
+                const response = await fetch('http://localhost:3000/printers', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(printerData),
+                });
+
+                if (response.ok) {
+                    alert('Printer registered successfully!');
+                    // Close modal after successful registration
+                    document.getElementById('registerPrinterModal').classList.add('hidden');
+                } else {
+                    const result = await response.json();
+                    alert(result.message || 'Failed to register printer.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error registering printer.');
+            }
+        });
+    </script>
 </body>
+
 </html>

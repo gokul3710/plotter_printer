@@ -2,12 +2,16 @@ import { WebSocketGateway, WebSocketServer, SubscribeMessage } from '@nestjs/web
 import { Server } from 'socket.io';
 import { GatewayService } from './gateway.service';
 
-@WebSocketGateway()
+@WebSocketGateway({
+  cors: {
+    origin: '*',  // Allows connections from any origin (use '*' for all origins or specify your domain)
+  },
+})
 export class GatewayGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly gatewayService: GatewayService) {}
+  constructor(private readonly gatewayService: GatewayService) { }
 
   onModuleInit() {
     // Assign the server instance to the GatewayService
@@ -26,9 +30,17 @@ export class GatewayGateway {
   //   return { status: 'success', message: 'Printer registered' };
   // }
 
+  // Get a list of all connected clients
+  getConnectedClients() {
+    const connectedClients = Array.from(this.server.sockets.sockets.values());
+    console.log('Connected Clients:', connectedClients);
+    return connectedClients.map((client) => client.id);  // Return only client IDs
+  }
+
   @SubscribeMessage('registerPrinter')
   handleRegisterPrinter(client: any, payload: any): string {
     console.log('Printer Registered:', payload);
+    console.log(this.getConnectedClients());
     return 'Printer registered successfully';
   }
 

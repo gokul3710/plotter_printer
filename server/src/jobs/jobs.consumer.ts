@@ -29,6 +29,7 @@ export class JobsConsumerService implements OnModuleInit {
 
           // Dispatch job to client via WebSocket
           const { clientId, ...jobDetails } = job;
+          console.log(this.gatewayService.getConnectedClients())
           this.gatewayService.dispatchPrintJob(clientId, jobDetails);
 
           // Acknowledge the job

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Client</title>
+</head>
+<body>
+  <h1>WebSocket Client</h1>
+  <p id="status">Connecting...</p>
+  <p><strong>Your Client ID:</strong> <span id="clientId">Loading...</span></p>
+  
+  <div>
+    <h2>Received Message:</h2>
+    <pre id="message"></pre>
+  </div>
+
+  <div id="received_jobs">
+    <h2>Received Jobs</h2>
+  </div>
+  
+  <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+  <script>
+    const host = "192.168.45.115";  // WebSocket server address
+    const socket = io(`http://${host}:3000`); // Connect to WebSocket server
+
+    const statusElement = document.getElementById('status');
+    const clientIdElement = document.getElementById('clientId');
+    const messageElement = document.getElementById('message');
+
+    // Handle the connection event
+    socket.on('connect', () => {
+      statusElement.textContent = 'Connected to WebSocket server';
+      clientIdElement.textContent = socket.id;  // Display the client ID
+    });
+
+    // Listen for print job event
+    socket.on('printJob', (data) => {
+      // alert(`Received print job: ${JSON.stringify(data, null, 2)}`);
+      // printJob(data);  // Call the printJob function with the received data
+
+      let div = document.createElement('div')
+      div.innerHTML = `
+      ${JSON.stringify(data)}
+      `
+      document.getElementById('received_jobs').appendChild(div)
+    });
+
+    // Function to register a printer
+    function registerPrinter(printerId) {
+      const payload = { printerId: printerId };
+      socket.emit('registerPrinter', payload, (response) => {
+        console.log('Server Response:', response);
+        messageElement.textContent = `Server Response: ${JSON.stringify(response, null, 2)}`;
+      });
+    }
+
+    // Example usage: Register a printer when the page loads
+    window.onload = () => {
+      registerPrinter('Printer-001');
+    };
+
+    // Function to handle print job and trigger printing
+    function printJob(jobData) {
+      // Assuming `jobData` contains a URL or base64-encoded data for the print file (e.g., PDF, image)
+      const printContent = jobData.content || '';  // Extract content from jobData
+
+      if (printContent) {
+        // If the content is an image or URL, display it in an iframe or new window
+        if (jobData.type === 'image') {
+          const img = new Image();
+          img.src = printContent; // Set the source to the image URL
+          img.onload = () => {
+            // Once the image is loaded, trigger the print
+            const printWindow = window.open();
+            printWindow.document.write('<img src="' + img.src + '" />');
+            printWindow.document.close();
+            printWindow.print();
+          };
+        } else if (jobData.type === 'pdf') {
+          // If the content is a PDF, use an iframe or a new window to display and print it
+          const iframe = document.createElement('iframe');
+          iframe.src = printContent;  // Assuming it's a URL or base64-encoded PDF
+          iframe.style.visibility = 'hidden'; // Hide the iframe
+          document.body.appendChild(iframe);
+          iframe.onload = () => {
+            iframe.contentWindow.print();
+          };
+        } else {
+          // If it's plain text or HTML content, display it in the print dialog
+          const printWindow = window.open();
+          printWindow.document.write(printContent);  // Insert the printable content
+          printWindow.document.close();
+          printWindow.print();
+        }
+      } else {
+        alert('No print content available.');
+      }
+    }
+  </script>
+</body>
+</html>
