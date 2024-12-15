@@ -8,8 +8,7 @@ export class JobsService {
   async submitJob(job: any) {
 
     try {
-      console.log(job);
-      const connection = await amqp.connect('amqp://guest:guest@127.0.0.1');
+      const connection = await amqp.connect(process.env.RABBITMQ_URI);
       const channel = await connection.createChannel();
 
       await channel.assertQueue(this.queueName, { durable: true });

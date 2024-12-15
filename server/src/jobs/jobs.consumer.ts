@@ -13,12 +13,10 @@ export class JobsConsumerService implements OnModuleInit {
   }
 
   private async consumeJobs() {
-    const connection = await amqp.connect('amqp://guest:guest@localhost:5672');
+    const connection = await amqp.connect(process.env.RABBITMQ_URI);
     const channel = await connection.createChannel();
 
     await channel.assertQueue(this.queueName, { durable: true });
-
-    console.log(`Waiting for messages in queue: ${this.queueName}`);
 
     channel.consume(
       this.queueName,
@@ -27,16 +25,13 @@ export class JobsConsumerService implements OnModuleInit {
           const job = JSON.parse(msg.content.toString());
           console.log('Job received:', job);
 
-          // Dispatch job to client via WebSocket
           const { clientId, ...jobDetails } = job;
-          console.log(this.gatewayService.getConnectedClients())
           this.gatewayService.dispatchPrintJob(clientId, jobDetails);
 
-          // Acknowledge the job
           channel.ack(msg);
         }
       },
-      { noAck: false }, // Ensure jobs are acknowledged after processing
+      { noAck: false },
     );
   }
 }
