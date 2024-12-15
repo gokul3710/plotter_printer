@@ -1,6 +1,7 @@
 import { Controller, Post, UseInterceptors, UploadedFile, Body, Req, Headers } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { JobsService } from './jobs.service';
+import { CreatePrintJobDto } from './dto/create-print-job.dto';
 
 @Controller('jobs')
 export class JobsController {
@@ -10,8 +11,8 @@ export class JobsController {
   @UseInterceptors(FileInterceptor('file'))
   async submitJob(
     @UploadedFile() file: Express.Multer.File,
-    @Body() body: any,
-    @Headers() headers: any
+    @Body() body: CreatePrintJobDto,
+    @Headers() headers: { [key: string]: string },
   ) {
     const job = {
       fileName: file.originalname,

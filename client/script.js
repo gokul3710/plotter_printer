@@ -1,5 +1,5 @@
 // Populate Printer Dropdown
-const clientId ="NVwzqSlYR_iAdZ4uAAB5"
+const clientId ="AZYfnBtSMfQZqqYFAAA3"
 
 document.addEventListener('DOMContentLoaded', async () => {
     const printerDropdown = document.getElementById('printerDropdown');

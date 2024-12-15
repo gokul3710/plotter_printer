@@ -1,6 +1,19 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const WebSocket = require('ws');
-const printer = require('printer');
+// const printer = require('printer');
+
+const printer = {
+    getPrinters: () => {
+        return [
+            { name: 'Printer 1' },
+            { name: 'Printer 2' },
+            { name: 'Printer 3' },
+        ];
+    },
+    printDirect: (options) => {
+        console.log('Simulating print:', options);
+    },
+}
 
 let mainWindow;
 let ws;

@@ -14,21 +14,9 @@ export class GatewayGateway {
   constructor(private readonly gatewayService: GatewayService) { }
 
   onModuleInit() {
-    // Assign the server instance to the GatewayService
     this.gatewayService.setServer(this.server);
     console.log('WebSocket server initialized');
   }
-
-  // // Handle incoming WebSocket events
-  // @SubscribeMessage('registerPrinter')
-  // handleRegisterPrinter(
-  //   @ConnectedSocket() client: Socket,
-  //   @MessageBody() payload: { printerId: string },
-  // ) {
-  //   console.log(`Client ${client.id} registered printer ${payload.printerId}`);
-  //   this.gatewayService.registerPrinter(client.id, payload.printerId);
-  //   return { status: 'success', message: 'Printer registered' };
-  // }
 
   // Get a list of all connected clients
   getConnectedClients() {

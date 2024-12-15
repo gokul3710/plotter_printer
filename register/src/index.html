@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>WebSocket Client</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white font-sans">
+
+  <div class="max-w-3xl mx-auto p-6">
+
+    <header class="text-center mb-6">
+      <h1 class="text-3xl font-semibold">WebSocket Client</h1>
+    </header>
+
+    <section id="status" class="mb-6">
+      <p class="text-lg">Connecting...</p>
+    </section>
+
+    <section id="clientIdParent" class="mb-6">
+      <p class="text-xl font-medium">Your Client ID: <span id="clientId" class="font-mono">Loading...</span></p>
+    </section>
+
+    <section id="messageParent" class="bg-gray-800 p-4 rounded-lg shadow-lg mb-6">
+      <h2 class="text-lg font-semibold mb-2">Received Message:</h2>
+      <pre id="message" class="text-sm text-gray-300"></pre>
+    </section>
+
+    <section id="received_jobs">
+      <h2 class="text-2xl font-semibold mb-4">Received Jobs</h2>
+      <div class="space-y-4" id="jobs-list">
+        <!-- Received jobs will be appended here -->
+      </div>
+    </section>
+
+  </div>
+
+  <script src="./renderer.js"></script>
+
+</body>
+</html>
