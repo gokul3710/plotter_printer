@@ -1,6 +1,9 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 let mainWindow;
 
 const createWindow = () => {
@@ -8,7 +11,7 @@ const createWindow = () => {
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'), // Ensure this matches the correct file path
+      preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
       nodeIntegration: true,
     },
@@ -17,7 +20,7 @@ const createWindow = () => {
   mainWindow.loadFile(path.join(__dirname, './index.html'));
 
   mainWindow.webContents.on('did-finish-load', () => {
-    console.log('Main window loaded');
+    mainWindow.webContents.send('setWsUrl', process.env.WS_URL);
   });
 };
 

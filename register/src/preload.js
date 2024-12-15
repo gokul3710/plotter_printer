@@ -10,12 +10,10 @@ contextBridge.exposeInMainWorld('webSocket', {
     }
 
     socket.on('connect', () => {
-      console.log('Connected to WebSocket server:', socket.id);
       window.postMessage({ type: 'connected', clientId: socket.id });
     });
 
     socket.on('printJob', (data) => {
-      console.log('Received print job:', data);
       window.postMessage({ type: 'printJob', data });
     });
 
@@ -26,8 +24,6 @@ contextBridge.exposeInMainWorld('webSocket', {
 contextBridge.exposeInMainWorld('electronAPI', {
   registerPrinter: (printerId) =>
     socket.emit('registerPrinter', {printerId}, (response) => {
-      console.log('Server Response:', response);
-      // messageElement.textContent = `Server Response: ${JSON.stringify(response, null, 2)}`;
       ipcRenderer.send('printerRegistered', response);
     })
 });
