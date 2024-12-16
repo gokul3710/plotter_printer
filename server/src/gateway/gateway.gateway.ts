@@ -1,6 +1,8 @@
 import { WebSocketGateway, WebSocketServer, SubscribeMessage } from '@nestjs/websockets';
 import { Server } from 'socket.io';
 import { GatewayService } from './gateway.service';
+import { PrinterService } from 'src/printer/printer.service';
+import { CreatePrinterDto } from 'src/printer/dto/create-printer.dto';
 
 @WebSocketGateway({
   cors: {
@@ -11,7 +13,10 @@ export class GatewayGateway {
   @WebSocketServer()
   server: Server;
 
-  constructor(private readonly gatewayService: GatewayService) { }
+  constructor(
+    private readonly gatewayService: GatewayService,
+    private readonly printerService: PrinterService,
+  ) { }
 
   onModuleInit() {
     this.gatewayService.setServer(this.server);
@@ -26,9 +31,8 @@ export class GatewayGateway {
   }
 
   @SubscribeMessage('registerPrinter')
-  handleRegisterPrinter(client: any, payload: any): string {
-    console.log('Printer Registered:', payload);
-    console.log(this.getConnectedClients());
+  handleRegisterPrinter(client: any, payload: CreatePrinterDto): string {
+    this.printerService.addPrinter(payload);
     return 'Printer registered successfully';
   }
 

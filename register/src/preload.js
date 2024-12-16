@@ -22,8 +22,8 @@ contextBridge.exposeInMainWorld('webSocket', {
 });
 
 contextBridge.exposeInMainWorld('electronAPI', {
-  registerPrinter: (printerId) =>
-    socket.emit('registerPrinter', {printerId}, (response) => {
+  registerPrinter: (payload) =>
+    socket.emit('registerPrinter', payload, (response) => {
       ipcRenderer.send('printerRegistered', response);
     })
 });

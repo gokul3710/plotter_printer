@@ -16,7 +16,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        window.electronAPI.registerPrinter('Printer-001')
+        window.electronAPI.registerPrinter({
+            name: 'Printer-001',
+            connectionType: 'usb',
+            connectionDetail: 'COM3'
+        })
 
     });
 
