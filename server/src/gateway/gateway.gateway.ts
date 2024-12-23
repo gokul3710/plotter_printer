@@ -12,6 +12,7 @@ import { CreatePrinterDto } from 'src/printer/dto/create-printer.dto';
 export class GatewayGateway {
   @WebSocketServer()
   server: Server;
+  clients = new Map();
 
   constructor(
     private readonly gatewayService: GatewayService,
@@ -23,6 +24,11 @@ export class GatewayGateway {
     console.log('WebSocket server initialized');
   }
 
+  handleConnection(client: any) {
+    this.clients.set(client.id, client.handshake.query.authToken);
+    console.log('Client connected:', client.id);
+    console.log('Connected Clients:', this.clients);
+  }
   // Get a list of all connected clients
   getConnectedClients() {
     const connectedClients = Array.from(this.server.sockets.sockets.values());
@@ -32,7 +38,8 @@ export class GatewayGateway {
 
   @SubscribeMessage('registerPrinter')
   handleRegisterPrinter(client: any, payload: CreatePrinterDto): string {
-    this.printerService.addPrinter(payload);
+    const user_id = this.clients.get(client.id);
+    this.printerService.addPrinter({...payload}, user_id);
     return 'Printer registered successfully';
   }
 

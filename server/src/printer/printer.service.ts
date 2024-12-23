@@ -12,8 +12,8 @@ export class PrinterService {
     private readonly printerRepository: Repository<Printer>,
   ) {}
 
-  async addPrinter(printerDto: CreatePrinterDto): Promise<any> {
-    const printer = this.printerRepository.create({...printerDto, user_id: "user_id"});
+  async addPrinter(printerDto: CreatePrinterDto, user_id?: string): Promise<any> {
+    const printer = this.printerRepository.create({...printerDto, user_id});
     return await this.printerRepository.save(printer);
   }
 

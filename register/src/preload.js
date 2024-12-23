@@ -10,10 +10,12 @@ contextBridge.exposeInMainWorld('webSocket', {
     }
 
     socket.on('connect', () => {
+      console.log('Connected to WebSocket server');
       window.postMessage({ type: 'connected', clientId: socket.id });
     });
 
     socket.on('printJob', (data) => {
+      console.log('Received print job:', data);
       window.postMessage({ type: 'printJob', data });
     });
 
