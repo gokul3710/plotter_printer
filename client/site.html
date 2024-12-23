@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Print Job Client</title>
+    <!-- React and ReactDOM CDN -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <!-- Babel CDN for JSX -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 dark:bg-gray-900 dark:text-white font-sans">
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const LoginPage = () => (
+            <div className="max-w-lg mx-auto mt-10 bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+                <h2 className="text-2xl text-center mb-4">Login</h2>
+                <form id="loginForm">
+                    <div className="mb-4">
+                        <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="username">Username:</label>
+                        <input type="text" id="username" name="username" className="w-full p-2 border border-gray-300 rounded-md" required />
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 dark:text-gray-300 mb-2" htmlFor="password">Password:</label>
+                        <input type="password" id="password" name="password" className="w-full p-2 border border-gray-300 rounded-md" required />
+                    </div>
+                    <button type="submit" className="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Login</button>
+                </form>
+                <p className="text-center mt-4">Don't have an account? <a href="#" className="text-blue-600">Register here</a></p>
+            </div>
+        );
+
+        const MainPage = () => (
+            <div>
+                <h1 className="text-3xl text-center my-6">Print Job Client</h1>
+
+                <form id="printJobForm" class="max-w-lg mx-auto bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                    <h2 class="text-xl mb-4">Submit a Print Job</h2>
+                    <div class="mb-4">
+                        <label for="file" class="block text-gray-700 dark:text-gray-300 mb-2">Upload File:</label>
+                        <input type="file" id="file" name="file" class="w-full p-2 border border-gray-300 rounded-md" required></input>
+                    </div>
+                    <div class="mb-4">
+                        <label for="settings" class="block text-gray-700 dark:text-gray-300 mb-2">Plotter Settings:</label>
+                        <select id="settings" name="settings" class="w-full p-2 border border-gray-300 rounded-md">
+                            <option value="high-quality">High Quality</option>
+                            <option value="draft">Draft</option>
+                            <option value="grayscale">Grayscale</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <label for="printerDropdown" class="block text-gray-700 dark:text-gray-300 mb-2">Select Printer:</label>
+                        <select id="printerDropdown" name="printerDropdown" class="w-full p-2 border border-gray-300 rounded-md"
+                            required>
+                            <option value="" disabled selected>Select a printer</option>
+                        </select>
+                    </div>
+                    <div class="mb-4">
+                        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-md hover:bg-blue-700">Submit Print
+                            Job</button>
+                    </div>
+                    <div class="text-center">
+                        <button type="button" id="openRegisterModal"
+                            class="w-full bg-green-600 text-white p-2 rounded-md hover:bg-green-700">Register Printer</button>
+                    </div>
+                </form>
+
+                <div id="registerPrinterModal" class="inset-0 bg-gray-900 bg-opacity-50 hidden justify-center items-center">
+                    <div class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-lg w-full">
+                        <h2 class="text-xl mb-4 text-center text-gray-900 dark:text-white">Register Your Printer</h2>
+                        <form id="registerPrinterForm">
+                            <div class="mb-4">
+                                <label for="printerName" class="block text-gray-700 dark:text-gray-300 mb-2">Printer Name:</label>
+                                <input type="text" id="printerName" name="printerName"
+                                    class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter Printer Name" required></input>
+                            </div>
+                            <div class="mb-4">
+                                <label for="printerType" class="block text-gray-700 dark:text-gray-300 mb-2">Connection
+                                    Type:</label>
+                                <select id="printerType" name="printerType" class="w-full p-2 border border-gray-300 rounded-md">
+                                    <option value="usb">USB</option>
+                                    <option value="ip">IP</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label for="connectionDetail" class="block text-gray-700 dark:text-gray-300 mb-2">Connection Detail
+                                    (IP or Port):</label>
+                                <input type="text" id="connectionDetail" name="connectionDetail"
+                                    class="w-full p-2 border border-gray-300 rounded-md" placeholder="Enter IP or USB Port"
+                                    required></input>
+                            </div>
+                            <div class="mb-4 flex justify-between">
+                                <button type="submit" class="bg-green-600 text-white p-2 rounded-md hover:bg-green-700">Register
+                                    Printer</button>
+                                <button type="button" id="closeModal"
+                                    class="bg-red-600 text-white p-2 rounded-md hover:bg-red-700">Close</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="mt-6 text-center">
+                    <p>Or download the <a href="/client-agent-installer" id="downloadAgent"
+                        class="text-blue-600 dark:text-blue-400">Client-Side Agent</a> for automatic printer setup.</p>
+                </div>
+            </div>
+        );
+
+        const App = () => {
+            const [isAuthenticated, setIsAuthenticated] = React.useState(false);
+
+            React.useEffect(() => {
+                const token = localStorage.getItem('token');
+                setIsAuthenticated(!!token); // Set true if token exists, false otherwise
+            }, []);
+
+            
+
+            return (
+                <div>
+                    {isAuthenticated ? <MainPage /> : <LoginPage />}
+                </div>
+            );
+        };
+
+        ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    </script>
+    <script src="script.js"></script>
+    <script>
+        // Show Register Printer Modal
+        document.getElementById('openRegisterModal').addEventListener('click', () => {
+            document.getElementById('registerPrinterModal').classList.remove('hidden');
+        });
+
+        // Close Register Printer Modal
+        document.getElementById('closeModal').addEventListener('click', () => {
+            document.getElementById('registerPrinterModal').classList.add('hidden');
+        });
+
+        // Handle Printer Registration
+        document.getElementById('registerPrinterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const printerName = document.getElementById('printerName').value;
+            const printerType = document.getElementById('printerType').value;
+            const connectionDetail = document.getElementById('connectionDetail').value;
+
+            const printerData = {
+                name: printerName,
+                connectionType: printerType,
+                connectionDetail,
+            };
+
+            try {
+                const headers = new Headers();
+                headers.append('Content-Type', 'application/json');
+                headers.append('x-client-id', 'my-client-id');
+                const response = await fetch('http://localhost:3000/printers', {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify(printerData),
+                });
+
+                if (response.ok) {
+                    alert('Printer registered successfully!');
+                    // Close modal after successful registration
+                    document.getElementById('registerPrinterModal').classList.add('hidden');
+                } else {
+                    const result = await response.json();
+                    alert(result.message || 'Failed to register printer.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error registering printer.');
+            }
+        });
+    </script>
+</body>
+
+</html>

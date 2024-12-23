@@ -1,37 +1,24 @@
 import { Injectable } from '@nestjs/common';
-import { join } from 'path';
-import { Database, open } from 'sqlite';
-import * as sqlite3 from 'sqlite3';
 import { CreatePrinterDto } from './dto/create-printer.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Printer } from './printer.entity';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class PrinterService {
-  private db: Database;
 
-  async initializeDatabase() {
-    this.db = await open({
-      filename: join(__dirname, 'printers.db'),
-      driver: sqlite3.Database,
-    });
+  constructor(
+    @InjectRepository(Printer)
+    private readonly printerRepository: Repository<Printer>,
+  ) {}
 
-    await this.db.exec(`CREATE TABLE IF NOT EXISTS printers (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      name TEXT NOT NULL,
-      connectionType TEXT NOT NULL,
-      connectionDetail TEXT NOT NULL
-    )`);
+  async addPrinter(printerDto: CreatePrinterDto): Promise<any> {
+    const printer = this.printerRepository.create({...printerDto, user_id: "user_id"});
+    return await this.printerRepository.save(printer);
   }
 
-  async addPrinter(printer: CreatePrinterDto): Promise<void> {
-    await this.db.run(
-      'INSERT INTO printers (name, connectionType, connectionDetail) VALUES (?, ?, ?)',
-      printer.name,
-      printer.connectionType,
-      printer.connectionDetail,
-    );
-  }
-
-  async getPrinters(): Promise<CreatePrinterDto[]> {
-    return this.db.all('SELECT * FROM printers');
+  async getPrinters(): Promise<Printer[]> {
+    let printers = await this.printerRepository.find();
+    return printers;
   }
 }

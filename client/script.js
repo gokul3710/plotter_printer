@@ -1,7 +1,13 @@
 // Populate Printer Dropdown
-const clientId ="1ol8GZSwBE2ETFZFAAAB"
+const clientId ="_gfJIgugl2fyQ2xaAAAJ"
 
 document.addEventListener('DOMContentLoaded', async () => {
+
+    const token = localStorage.getItem('token');
+    if(!token){
+        return;
+    }
+
     const printerDropdown = document.getElementById('printerDropdown');
     try {
         const headers = new Headers({

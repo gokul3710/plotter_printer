@@ -6,7 +6,7 @@ import { CreatePrinterDto } from 'src/printer/dto/create-printer.dto';
 
 @WebSocketGateway({
   cors: {
-    origin: '*',  // Allows connections from any origin (use '*' for all origins or specify your domain)
+    origin: '*',
   },
 })
 export class GatewayGateway {

@@ -5,9 +5,11 @@ import { JobsModule } from './jobs/jobs.module';
 import { AuthModule } from './auth/auth.module';
 import { GatewayModule } from './gateway/gateway.module';
 import { PrinterModule } from './printer/printer.module';
+import { DatabaseModule } from './database/database.module';
+import { UserModule } from './user/user.module';
 
 @Module({
-  imports: [JobsModule, AuthModule, GatewayModule, PrinterModule],
+  imports: [JobsModule, AuthModule, GatewayModule, PrinterModule, DatabaseModule, UserModule],
   controllers: [AppController],
   providers: [AppService],
 })

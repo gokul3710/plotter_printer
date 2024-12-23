@@ -4,9 +4,7 @@ import { CreatePrinterDto } from './dto/create-printer.dto';
 
 @Controller('printers')
 export class PrinterController {
-  constructor(private readonly printerService: PrinterService) {
-    this.printerService.initializeDatabase();
-  }
+  constructor(private readonly printerService: PrinterService) {}
 
   @Post()
   async addPrinter(@Body() createPrinterDto: CreatePrinterDto): Promise<{ message: string }> {
