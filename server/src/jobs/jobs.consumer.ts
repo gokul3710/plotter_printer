@@ -23,8 +23,6 @@ export class JobsConsumerService implements OnModuleInit {
       async (msg) => {
         if (msg) {
           const job = JSON.parse(msg.content.toString());
-          console.log('Job received:', job);
-
           const { clientId, ...jobDetails } = job;
           this.gatewayService.dispatchPrintJob(clientId, jobDetails);
 

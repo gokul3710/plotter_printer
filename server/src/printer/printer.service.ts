@@ -13,7 +13,6 @@ export class PrinterService {
   ) {}
 
   async addPrinter(printerDto: CreatePrinterDto, userId: string): Promise<any> {
-    console.log({printerDto, userId});
     const printer = this.printerRepository.create({...printerDto, userId});
     return await this.printerRepository.save(printer);
   }

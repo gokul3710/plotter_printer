@@ -2,7 +2,6 @@ const query = window.location.search;
 const urlParams = new URLSearchParams(query);
 const redirectFrom = urlParams.get('redirectFrom');
 
-console.log(redirectFrom);
 if(redirectFrom === "register") {
     const isLoggedIn = localStorage.getItem('token');
     console.log(isLoggedIn);
