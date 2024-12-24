@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 @Injectable()
 export class GatewayService {
   private server: Server;
+  clients = new Map();
 
   // Set the WebSocket server instance
   setServer(server: Server) {
@@ -19,10 +20,13 @@ export class GatewayService {
     }
   }
 
+  getActiveClientId(userId: string) {
+    return this.clients.get(userId);
+  }
+
   // Get a list of all connected clients
   getConnectedClients() {
     const connectedClients = Array.from(this.server.sockets.sockets.values());
-    console.log('Connected Clients:', connectedClients);
     return connectedClients.map((client) => client);  // Return only client IDs
   }
 

@@ -16,14 +16,12 @@ export class JobsController {
     @User() userId: string,
     @UploadedFile() file: Express.Multer.File,
     @Body() body: CreatePrintJobDto,
-    @Headers() headers: { [key: string]: string },
   ) {
     const job = {
       fileName: file.originalname,
       filePath: file.path,
       settings: body.settings,
       printerName: body.printerName,
-      clientId: headers['x-client-id'],
       userId: userId
     };
     return this.jobsService.submitJob(job);

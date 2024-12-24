@@ -1,6 +1,4 @@
 // Populate Printer Dropdown
-const clientId ="_gfJIgugl2fyQ2xaAAAJ"
-
 document.addEventListener('DOMContentLoaded', async () => {
 
     const token = localStorage.getItem('token');
@@ -12,7 +10,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const headers = new Headers({
             'Content-Type': 'application/json',
-            'x-client-id': clientId,
             'Authorization': `Bearer ${token}`
         });
 
@@ -40,6 +37,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 document.getElementById('printJobForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem('token');
+    if(!token){
+        return;
+    }
+
     const fileInput = document.getElementById('file');
     const settings = document.getElementById('settings').value;
     const printerName = document.getElementById('printerDropdown').value;
@@ -59,7 +61,7 @@ document.getElementById('printJobForm').addEventListener('submit', async (e) => 
             method: 'POST',
             body: formData,
             headers: {
-                'x-client-id': clientId
+                'Authorization': `Bearer ${token}`
             }
         });
 
@@ -104,7 +106,6 @@ document.getElementById('registerPrinterForm').addEventListener('submit', async 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-client-id': clientId,
                 'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(printerData)

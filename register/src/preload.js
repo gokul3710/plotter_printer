@@ -3,10 +3,14 @@ const { io } = require('socket.io-client');
 let socket = null;
 
 contextBridge.exposeInMainWorld('webSocket', {
-  connect: (url) => {
-    
+  connect: (url, authToken) => {
     if (!socket) {
-      socket = io(url);
+      // Pass the Authorization header with Bearer token
+      socket = io(url, {
+        extraHeaders: {
+          "authorization": `Bearer ${authToken}`,
+        },
+      });
     }
 
     socket.on('connect', () => {

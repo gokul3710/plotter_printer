@@ -7,7 +7,8 @@ import { MulterModule } from '@nestjs/platform-express';
 import { CommonModule } from 'src/common/common.module';
 
 @Module({
-  imports: [GatewayModule,
+  imports: [
+    GatewayModule,
     MulterModule.register({
       dest: './uploads', // Directory to save uploaded files
     }),

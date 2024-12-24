@@ -83,8 +83,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
     
-        const socket = window.webSocket.connect(`${wsUrl}?authToken=${authToken}`);
-    
+        const socket = window.webSocket.connect(wsUrl, authToken);
+
         window.addEventListener('message', (event) => {
             if (event.data.type === 'connected') {
                 document.getElementById('status').textContent = 'Connected to WebSocket server'
@@ -97,7 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 })
             } else if (event.data.type === 'printJob') {
                 const jobDiv = document.createElement('div');
-                jobDiv.textContent = `Print Job: ${JSON.stringify(data)}`;
+                jobDiv.textContent = `Print Job: ${JSON.stringify(event.data.data)}`;
                 document.getElementById('received_jobs').appendChild(jobDiv);
             }
         });
