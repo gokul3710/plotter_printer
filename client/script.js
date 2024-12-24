@@ -1,3 +1,20 @@
+const query = window.location.search;
+const urlParams = new URLSearchParams(query);
+const redirectFrom = urlParams.get('redirectFrom');
+
+console.log(redirectFrom);
+if(redirectFrom === "register") {
+    const isLoggedIn = localStorage.getItem('token');
+    console.log(isLoggedIn);
+    if(!isLoggedIn){
+        // window.location.href = '';
+    }else{
+        console.log(isLoggedIn);
+        const authToken = localStorage.getItem('token');
+        window.location.href = `printer-register://login_success?authToken=${authToken}`;
+    }
+}
+
 // Populate Printer Dropdown
 document.addEventListener('DOMContentLoaded', async () => {
 

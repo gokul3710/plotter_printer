@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', () => {
         setClientId();
     });
 
+    window.ipcRenderer.on('setAuthToken', (event, authToken) => {
+        console.log(authToken);
+        setClientId(authToken);
+    });
+
     window.ipcRenderer.on('printerRegistrationResponse', (event, response) => {
         document.getElementById('message').textContent = response;
     });
@@ -73,22 +78,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     checkAuthentication();
 
-    function setClientId() {
+    function setClientId(token) {
+
+        if (token) {
+            localStorage.setItem('authToken', token);
+            isLoggedIn = true;
+            authContainer.classList.add('hidden');
+            appContainer.classList.remove('hidden');
+        }
 
         if (isConnected) return;
         if (!isLoggedIn) return;
-    
+
         const authToken = localStorage.getItem('authToken');
-        if(!authToken){
+        if (!authToken) {
             return;
         }
-    
+
         const socket = window.webSocket.connect(wsUrl, authToken);
 
         window.addEventListener('message', (event) => {
             if (event.data.type === 'connected') {
                 document.getElementById('status').textContent = 'Connected to WebSocket server'
-                document.getElementById('clientId').textContent = event.data.clientId;            
+                document.getElementById('clientId').textContent = event.data.clientId;
                 isConnected = true;
                 window.electronAPI.registerPrinter({
                     name: 'Printer-001',
@@ -103,5 +115,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+});
+
+
+// Handler for the link click
+document.getElementById('downloadAgent').addEventListener('click', (event) => {
+    event.preventDefault(); // Prevent the default anchor link behavior
+    const url = event.target.href;
+
+    // Open the URL in the default browser
+    window.electronShell.openExternal(url);
 });
 

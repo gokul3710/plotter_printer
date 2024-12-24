@@ -1,6 +1,14 @@
 const { app, BrowserWindow, ipcMain } = require('electron');
 const path = require('path');
 
+if(process.defaultApp) {
+  if(process.argv.length >= 2) {
+    app.setAsDefaultProtocolClient('printer-register', process.execPath, [path.resolve(process.argv[1])]);
+  }
+}else{
+  app.setAsDefaultProtocolClient('printer-register');
+}
+
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -38,6 +46,28 @@ app.on('activate', () => {
     createWindow();
   }
 });
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+}else{
+  app.on('second-instance', () => {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) {
+        mainWindow.restore();
+      }
+      mainWindow.focus();
+    }
+  });
+}
+
+app.on('open-url', (event, url) => {
+  const authToken = url.split('authToken=')[1];
+  mainWindow.webContents.send('setAuthToken', authToken);
+  // event.preventDefault();
+  // mainWindow.webContents.send('setAuthToken', url);
+})
 
 // IPC handler for when printer is registered
 ipcMain.on('printerRegistered', (event, response) => {

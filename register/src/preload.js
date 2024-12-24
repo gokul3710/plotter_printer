@@ -1,6 +1,13 @@
 const { contextBridge, ipcRenderer } = require('electron');
 const { io } = require('socket.io-client');
+const shell = require('electron').shell;
 let socket = null;
+
+contextBridge.exposeInMainWorld('electronShell', {
+  openExternal: (url) => {
+    shell.openExternal(url);
+  },
+});
 
 contextBridge.exposeInMainWorld('webSocket', {
   connect: (url, authToken) => {
