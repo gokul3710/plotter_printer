@@ -8,6 +8,7 @@ config()
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor() {
+    console.log('JwtStrategy');
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken() || '',
       secretOrKey: 'your-secret-key',

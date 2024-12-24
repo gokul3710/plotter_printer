@@ -3,6 +3,7 @@ import { Server } from 'socket.io';
 import { GatewayService } from './gateway.service';
 import { PrinterService } from 'src/printer/printer.service';
 import { CreatePrinterDto } from 'src/printer/dto/create-printer.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @WebSocketGateway({
   cors: {
@@ -17,6 +18,7 @@ export class GatewayGateway {
   constructor(
     private readonly gatewayService: GatewayService,
     private readonly printerService: PrinterService,
+    private readonly jwtService: JwtService
   ) { }
 
   onModuleInit() {
@@ -37,9 +39,10 @@ export class GatewayGateway {
   }
 
   @SubscribeMessage('registerPrinter')
-  handleRegisterPrinter(client: any, payload: CreatePrinterDto): string {
-    const user_id = this.clients.get(client.id);
-    this.printerService.addPrinter({...payload}, user_id);
+  async handleRegisterPrinter(client: any, payload: CreatePrinterDto): Promise<string> {
+    const user = this.clients.get(client.id);
+    let userData = await this.jwtService.verify(user);
+    this.printerService.addPrinter({...payload}, userData.userId);
     return 'Printer registered successfully';
   }
 

@@ -79,6 +79,11 @@ document.getElementById('printJobForm').addEventListener('submit', async (e) => 
 document.getElementById('registerPrinterForm').addEventListener('submit', async (e) => {
     e.preventDefault();
 
+    const token = localStorage.getItem('token');
+    if(!token){
+        return;
+    }
+
     const printerName = document.getElementById('printerName').value;
     const printerType = document.getElementById('printerType').value;
     const connectionDetail = document.getElementById('connectionDetail').value;
@@ -99,7 +104,8 @@ document.getElementById('registerPrinterForm').addEventListener('submit', async 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'x-client-id': clientId
+                'x-client-id': clientId,
+                'Authorization': `Bearer ${token}`
             },
             body: JSON.stringify(printerData)
         });

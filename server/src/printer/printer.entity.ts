@@ -9,7 +9,7 @@ export class Printer {
   name: string;
 
   @Column()
-  user_id: string;
+  userId: string;
 
   @Column()
   connectionType: string;

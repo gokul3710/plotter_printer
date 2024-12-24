@@ -7,9 +7,7 @@ import { GatewayModule } from './gateway/gateway.module';
 import { PrinterModule } from './printer/printer.module';
 import { DatabaseModule } from './database/database.module';
 import { UserModule } from './user/user.module';
-import { JwtStrategy } from './common/strategy/jwt.strategy';
 import { CommonModule } from './common/common.module';
-import { PassportModule } from '@nestjs/passport';
 
 @Module({
   imports: [
@@ -19,9 +17,7 @@ import { PassportModule } from '@nestjs/passport';
     GatewayModule,
     PrinterModule,
     DatabaseModule,
-    UserModule,
-    CommonModule,
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    UserModule
   ],
   controllers: [AppController],
   providers: [AppService],

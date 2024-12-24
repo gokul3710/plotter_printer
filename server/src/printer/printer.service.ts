@@ -12,13 +12,18 @@ export class PrinterService {
     private readonly printerRepository: Repository<Printer>,
   ) {}
 
-  async addPrinter(printerDto: CreatePrinterDto, user_id?: string): Promise<any> {
-    const printer = this.printerRepository.create({...printerDto, user_id});
+  async addPrinter(printerDto: CreatePrinterDto, userId: string): Promise<any> {
+    console.log({printerDto, userId});
+    const printer = this.printerRepository.create({...printerDto, userId});
     return await this.printerRepository.save(printer);
   }
 
-  async getPrinters(): Promise<Printer[]> {
-    let printers = await this.printerRepository.find();
+  async getPrinters(userId?: string): Promise<Printer[]> {
+    let printers = await this.printerRepository.find({
+      where: {
+        userId: userId
+      }
+    });
     return printers;
   }
 }

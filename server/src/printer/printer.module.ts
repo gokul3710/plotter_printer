@@ -4,13 +4,13 @@ import { PrinterService } from './printer.service';
 import { DatabaseModule } from 'src/database/database.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Printer } from './printer.entity';
-import { PassportModule } from '@nestjs/passport';
+import { CommonModule } from 'src/common/common.module';
 
 @Module({
   imports: [
     DatabaseModule,
     TypeOrmModule.forFeature([Printer]),
-    PassportModule.register({ defaultStrategy: 'jwt' }),
+    CommonModule
   ],
   controllers: [PrinterController],
   providers: [PrinterService],

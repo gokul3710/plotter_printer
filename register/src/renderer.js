@@ -57,8 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const data = await response.json();
             if (data.type === 'success') {
-                localStorage.setItem('authToken', data.access_token); // Save token securely
-                localStorage.setItem('refreshToken', data.refresh_token); // Save token securely
+                localStorage.setItem('authToken', data.data.access_token); // Save token securely
+                localStorage.setItem('refreshToken', data.data.refresh_token); // Save token securely
                 isLoggedIn = true;
                 setClientId();
                 showMainApp();

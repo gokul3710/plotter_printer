@@ -1,13 +1,30 @@
+import { Optional } from '@nestjs/common';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
-export class User {
+export class UserEntity {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  name: string;
+  @Column({
+    type: 'varchar',
+    generated: 'uuid'
+  })
+  userId: string;
 
-  @Column()
+  @Column({
+    type: 'varchar'
+  })
+  email: string;
+
+  @Column({
+    type: 'varchar'
+  })
+  password: string;
+
+  @Column({
+    type: 'varchar',
+    nullable: true
+  })
   clientId: string;
 }
