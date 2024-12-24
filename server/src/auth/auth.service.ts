@@ -9,7 +9,7 @@ export class AuthService {
   constructor(private jwtService: JwtService) {}
 
   async login(user: LoginDto) {
-    const payload = { email: user.email };
+    const payload = { email: user.email, userId: user.email };
     return {
       type: "success",
       access_token: this.jwtService.sign(payload, {
@@ -22,7 +22,7 @@ export class AuthService {
   }
 
   async signup(user: SignupDto) {
-    const payload = { email: user.email };
+    const payload = { email: user.email, userId: user.email };
     return {
       access_token: this.jwtService.sign(payload, {
         expiresIn: '1d'

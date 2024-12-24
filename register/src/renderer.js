@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Check if user is authenticated
     const checkAuthentication = () => {
-        const token = localStorage.getItem('authToken'); // Store the token securely
+        const token = localStorage.getItem('authToken');
         if (token) {
             isLoggedIn = true;
             showMainApp();
@@ -59,6 +59,8 @@ document.addEventListener('DOMContentLoaded', () => {
             if (data.type === 'success') {
                 localStorage.setItem('authToken', data.access_token); // Save token securely
                 localStorage.setItem('refreshToken', data.refresh_token); // Save token securely
+                isLoggedIn = true;
+                setClientId();
                 showMainApp();
             } else {
                 throw new Error(data.message || 'Authentication failed');
@@ -71,34 +73,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
     checkAuthentication();
 
-});
+    function setClientId() {
 
-function setClientId() {
-
-    if (isConnected) return;
-    if (!isLoggedIn) return;
-
-    const authToken = localStorage.getItem('authToken');
-    if(!authToken){
-        return;
+        if (isConnected) return;
+        if (!isLoggedIn) return;
+    
+        const authToken = localStorage.getItem('authToken');
+        if(!authToken){
+            return;
+        }
+    
+        const socket = window.webSocket.connect(`${wsUrl}?authToken=${authToken}`);
+    
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'connected') {
+                document.getElementById('status').textContent = 'Connected to WebSocket server'
+                document.getElementById('clientId').textContent = event.data.clientId;            
+                isConnected = true;
+                window.electronAPI.registerPrinter({
+                    name: 'Printer-001',
+                    connectionType: 'usb',
+                    connectionDetail: 'COM3',
+                })
+            } else if (event.data.type === 'printJob') {
+                const jobDiv = document.createElement('div');
+                jobDiv.textContent = `Print Job: ${JSON.stringify(data)}`;
+                document.getElementById('received_jobs').appendChild(jobDiv);
+            }
+        });
     }
 
-    const socket = window.webSocket.connect(`${wsUrl}?authToken=${authToken}`);
+});
 
-    window.addEventListener('message', (event) => {
-        if (event.data.type === 'connected') {
-            document.getElementById('status').textContent = 'Connected to WebSocket server'
-            document.getElementById('clientId').textContent = event.data.clientId;            
-            isConnected = true;
-            window.electronAPI.registerPrinter({
-                name: 'Printer-001',
-                connectionType: 'usb',
-                connectionDetail: 'COM3',
-            })
-        } else if (event.data.type === 'printJob') {
-            const jobDiv = document.createElement('div');
-            jobDiv.textContent = `Print Job: ${JSON.stringify(data)}`;
-            document.getElementById('received_jobs').appendChild(jobDiv);
-        }
-    });
-}

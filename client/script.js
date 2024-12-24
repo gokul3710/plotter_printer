@@ -12,7 +12,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const headers = new Headers({
             'Content-Type': 'application/json',
-            'x-client-id': clientId
+            'x-client-id': clientId,
+            'Authorization': `Bearer ${token}`
         });
 
         const response = await fetch('http://localhost:3000/printers', { headers });
